@@ -1,0 +1,22 @@
+{
+  "name": "adventurers-guild",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^13.1.0",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.6.5",
+    "sequelize-typescript": "^2.1.0",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.9.6",
+    "@types/validator": "^13.6.3",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "dev": "tsnd  --respawn --clear --quiet src/"
+  }
+}
