@@ -1,4 +1,5 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { BelongsToCreateAssociationMixin, BelongsToSetAssociationMixin } from 'sequelize/types';
 import Party from './Party';
 
 @Table
@@ -9,16 +10,12 @@ export default class Leader extends Model {
   @Column({ type: DataType.STRING })
   name!: string;
 
-  @Column({ type: DataType.INTEGER, defaultValue: 100 })
-  health!: number;
-
-  @Column({ type: DataType.INTEGER, defaultValue: 50 })
-  mana!: number;
-
   @ForeignKey(() => Party)
   @Column
   partyId!: number;
 
   @BelongsTo(() => Party)
   party!: Party;
+
+  createParty: BelongsToCreateAssociationMixin<Party>;
 }

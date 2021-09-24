@@ -4,14 +4,14 @@ import Leader from './Leader';
 @Table
 export default class Party extends Model {
   @Column
-  partyName: string;
+  partyName!: string;
 
   @ForeignKey(() => Leader)
   @Column
-  leaderId: string;
+  leaderId!: string;
 
   @HasOne(() => Leader)
-  leader: Leader;
+  leader!: Leader;
 
   // @HasMany(() => Member)
   // members: Member[];

@@ -1,5 +1,6 @@
 import { Message } from 'discord.js';
 import Leader from '../models/Leader';
+import Party from '../models/Party';
 
 export default class GuildController {
   static async processCommand(message: Message, args: string[]) {
@@ -16,6 +17,11 @@ export default class GuildController {
         break;
       }
 
+      case 'party': {
+        this.viewPartyInfo(message);
+        break;
+      }
+
       default:
         break;
     }
@@ -29,8 +35,19 @@ export default class GuildController {
       return;
     }
 
-    await Leader.create({ id: message.author.id, name: message.author.username });
+    const createdLeader = await Leader.create({ id: message.author.id, name: message.author.username });
+    const createdParty = await createdLeader.createParty({ partyName, leaderId: message.author.id });
 
-    message.reply(`You've successfully registered into the guild!`);
+    message.reply(`You've successfully registered your party, **${createdParty.partyName}**, into the guild!`);
+  }
+
+  static async viewPartyInfo(message: Message) {
+    const party = await Party.findOne({ where: { leaderId: message.author.id } });
+
+    if (party) {
+      message.reply(`Party name: ${party.partyName}`);
+    } else {
+      message.reply(`You haven't registered into the guild yet!`);
+    }
   }
 }
