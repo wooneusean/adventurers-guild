@@ -1,7 +1,8 @@
 import { token, prefix } from './config.json';
 import { Client, Intents } from 'discord.js';
 import { Sequelize } from 'sequelize-typescript';
-import GuildController from './controllers/leader';
+import GuildController from './controllers/guild';
+import PartyController from './controllers/party';
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
@@ -30,12 +31,21 @@ client.on('messageCreate', (message) => {
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
 
-  if (command === 'guild') {
-    GuildController.processCommand(message, args);
+  switch (command) {
+    case 'guild':
+      GuildController.processCommand(message, args);
+      break;
+
+    case 'party':
+      PartyController.processCommand(message, args);
+      break;
+
+    default:
+      break;
   }
 });
 
 (async () => {
-  await sequelize.sync({ force: true });
+  // await sequelize.sync({ force: true });
   client.login(token);
 })();

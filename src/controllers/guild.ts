@@ -1,5 +1,6 @@
-import { Message } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import Leader from '../models/Leader';
+import Member from '../models/Member';
 import Party from '../models/Party';
 
 export default class GuildController {
@@ -42,10 +43,23 @@ export default class GuildController {
   }
 
   static async viewPartyInfo(message: Message) {
-    const party = await Party.findOne({ where: { leaderId: message.author.id } });
+    const party = await Party.findOne({ where: { leaderId: message.author.id }, include: [Member] });
 
     if (party) {
-      message.reply(`Party name: ${party.partyName}`);
+      const partyEmbed = new MessageEmbed().setTitle(`Party: ${party.partyName}`).addFields(
+        party.members.length > 0
+          ? party.members.map((member) => {
+              return { name: ` Lv.${member.level} ${member.name}`, value: `${member.health} HP\n${member.mana} MP` };
+            })
+          : [
+              {
+                name: 'No members',
+                value: 'Join the guild to start your party!',
+              },
+            ]
+      );
+
+      message.channel.send({ embeds: [partyEmbed] });
     } else {
       message.reply(`You haven't registered into the guild yet!`);
     }
